@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/**","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
