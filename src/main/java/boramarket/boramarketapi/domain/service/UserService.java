@@ -1,14 +1,11 @@
 package boramarket.boramarketapi.domain.service;
 
-import boramarket.boramarketapi.domain.entity.user.User;
 import boramarket.boramarketapi.domain.entity.user.UserRepository;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
