@@ -10,18 +10,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class GoodsService {
     private final GoodsRepository goodsRepository ;
-    private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public GoodsResponseDto getGoods(){
-        Goods goods = goodsRepository.findById(2L).orElseThrow(()-> new IllegalArgumentException("ㅇㅇ"));
-        System.out.println(goods.getGoodsName());
+    public List<GoodsResponseDto> getGoods(){
+        List<Goods> goods = goodsRepository.findAll();
 
+        return goods.stream()
+                .map(Goods :: toDto)
+                .collect(Collectors.toList());
+
+                /*
         return GoodsResponseDto.builder()
                 .id(goods.getGoodsId())
                 .goodsName(goods.getGoodsName())
@@ -34,6 +38,7 @@ public class GoodsService {
                 .tour(goods.getTour().getTourName())
                 .price(goods.getGoodsPrice())
                 .build();
+                 */
     }
 
 }
