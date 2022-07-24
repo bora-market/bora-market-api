@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @Api(tags = "굿즈 정보")
 @RequiredArgsConstructor
@@ -24,14 +26,9 @@ public class GoodsController {
     private final GoodsService goodsService;
 
     @PostMapping("/goods")
-    private ResponseEntity<GoodsResponseDto> getGoods(){
+    private ResponseEntity<List<GoodsResponseDto>> getGoods(){
 
         return new ResponseEntity<>(goodsService.getGoods(), HttpStatus.OK);
     }
 
-    @PostMapping("/goods/{category}")
-    private ResponseEntity<GoodsResponseDto> getGoods(@RequestParam String category){
-
-        return new ResponseEntity<>(goodsService.getGoods(), HttpStatus.OK);
-    }
 }

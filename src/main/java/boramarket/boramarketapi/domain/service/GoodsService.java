@@ -10,30 +10,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class GoodsService {
     private final GoodsRepository goodsRepository ;
-    private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public GoodsResponseDto getGoods(){
-        Goods goods = goodsRepository.findById(2L).orElseThrow(()-> new IllegalArgumentException("ㅇㅇ"));
-        System.out.println(goods.getGoodsName());
+    public List<GoodsResponseDto> getGoods(){
+        List<Goods> goods = goodsRepository.findAll();
 
+        return goods.stream()
+                .map(Goods :: toDto)
+                .collect(Collectors.toList());
+
+                /*
         return GoodsResponseDto.builder()
                 .id(goods.getGoodsId())
                 .goodsName(goods.getGoodsName())
                 .store(goods.getStore().getStoreName())
                 .releaseDate(goods.getReleaseDate())
                 .country(goods.getCountry().getCountryName())
-                .categoryBig(goods.getCategory().getCategoryParentLev().getCategoryId().toString())
+                .categoryBig(goods.getCategory().getCategoryParentLev().getCategoryName())
                 .categorySmall(goods.getCategory().getCategoryName())
                 .color(goods.getGoodsColor())
                 .tour(goods.getTour().getTourName())
                 .price(goods.getGoodsPrice())
                 .build();
+                 */
     }
 
 }
