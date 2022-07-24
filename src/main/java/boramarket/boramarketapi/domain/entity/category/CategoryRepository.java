@@ -8,5 +8,4 @@ import java.util.Collection;
 
 public interface CategoryRepository extends JpaRepository<Category,Long> {
 
-    Collection<Goods> findByCategoryName(String categoryName);
 }
