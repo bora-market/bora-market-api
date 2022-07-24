@@ -4,7 +4,8 @@ import boramarket.boramarketapi.domain.entity.goods.Goods;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -28,4 +29,8 @@ public class Category {
 
     @Column
     private int categoryDetailLev;
+
+    @OneToMany(mappedBy = "category")
+    private List<Goods> goods = new ArrayList<>();
+
 }
