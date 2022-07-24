@@ -23,7 +23,7 @@ public class Category {
     private String categoryName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cateogry_parent_lev",referencedColumnName = "categoryId")
+    @JoinColumn(name = "category_parent_lev")
     private Category categoryParentLev;
 
     @Column
