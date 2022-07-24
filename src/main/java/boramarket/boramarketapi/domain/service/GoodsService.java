@@ -28,7 +28,7 @@ public class GoodsService {
                 .store(goods.getStore().getStoreName())
                 .releaseDate(goods.getReleaseDate())
                 .country(goods.getCountry().getCountryName())
-                .categoryBig(goods.getCategory().getCategoryParentLev().getCategoryId().toString())
+                .categoryBig(goods.getCategory().getCategoryParentLev().getCategoryName())
                 .categorySmall(goods.getCategory().getCategoryName())
                 .color(goods.getGoodsColor())
                 .tour(goods.getTour().getTourName())
