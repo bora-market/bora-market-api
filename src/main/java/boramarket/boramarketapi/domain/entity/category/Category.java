@@ -28,8 +28,4 @@ public class Category {
 
     @Column
     private int categoryDetailLev;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "goods_id")
-    private Collection<Goods> goods;
 }
