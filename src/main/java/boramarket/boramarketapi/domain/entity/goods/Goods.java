@@ -6,6 +6,7 @@ import boramarket.boramarketapi.domain.entity.country.Country;
 import boramarket.boramarketapi.domain.entity.size.Size;
 import boramarket.boramarketapi.domain.entity.tour.Tour;
 import boramarket.boramarketapi.domain.entity.user.BaseTimeEntity;
+import boramarket.boramarketapi.web.goods.dto.GoodsResponseDto;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -53,4 +54,18 @@ public class Goods{
     private int goodsPrice;
 
 
+    public GoodsResponseDto toDto(){
+        return GoodsResponseDto.builder()
+                .id(goodsId)
+                .goodsName(goodsName)
+                .store(store.getStoreName())
+                .releaseDate(releaseDate)
+                .country(country.getCountryName())
+                .categoryBig(category.getCategoryParentLev().getCategoryName())
+                .categorySmall(category.getCategoryName())
+                .color(goodsColor)
+                .tour(tour.getTourName())
+                .price(goodsPrice)
+                .build();
+    }
 }
