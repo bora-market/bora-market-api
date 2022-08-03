@@ -39,6 +39,9 @@ dependencies {
     //h2
     // https://mvnrepository.com/artifact/com.h2database/h2
     testImplementation 'com.h2database:h2:2.1.214'
+
+    //thymeleaf
+    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 }
 
 tasks.named('test') {

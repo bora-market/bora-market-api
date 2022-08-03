@@ -1,0 +1,15 @@
+paths:
+  /pets:
+    post:
+      summary: Add a new pet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'boramarket.boramarketapi.web'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Created
