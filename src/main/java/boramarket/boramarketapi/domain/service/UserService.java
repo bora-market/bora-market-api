@@ -1,5 +1,7 @@
 package boramarket.boramarketapi.domain.service;
 
+import boramarket.boramarketapi.config.session.UserRedisRepository;
+import boramarket.boramarketapi.config.session.vo.UserSession;
 import boramarket.boramarketapi.domain.entity.user.User;
 import boramarket.boramarketapi.domain.entity.user.UserRepository;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -18,7 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final HttpSession httpSession;
+    private final UserRedisRepository userRedisRepository;
 
     @Transactional
     public Boolean signUp(UserRequestDto requestDto){
@@ -31,14 +34,23 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public boolean login(String id, String pwd){
+    public UUID login(String id, String pwd){
         User user = userRepository.findByUserId(id).orElse(null);
 
         if(user == null || !passwordEncoder.matches(pwd,user.getUserPw())){
-            return false;
+            return null;
         }
 
-        return true;
+        UUID uuid = UUID.randomUUID();
+        UserSession userSession = UserSession.builder()
+                .id(uuid.toString())
+                .userId(user.getUserId())
+                .userPw(user.getUserPw())
+                .userName(user.getUserName())
+                .build();
 
+        userRedisRepository.save(userSession);
+
+        return uuid;
     }
 }

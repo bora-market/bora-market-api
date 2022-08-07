@@ -1,7 +1,7 @@
 package boramarket.boramarketapi.web.user;
 
 import boramarket.boramarketapi.config.session.SessionAttribute;
-import boramarket.boramarketapi.config.session.vo.UserVO;
+import boramarket.boramarketapi.config.session.vo.UserSession;
 import boramarket.boramarketapi.domain.service.UserService;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
 import io.swagger.annotations.Api;
@@ -12,9 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.UUID;
 
 @Api(tags = "유저")
 @Slf4j
@@ -34,34 +37,28 @@ public class UserController {
         return new ResponseEntity<>(false,HttpStatus.OK);
     }
 
+    /*
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    private HttpStatus jsonLogin(@RequestBody UserVO userVO, HttpServletRequest request){
+    private HttpStatus jsonLogin(@RequestBody UserSession userSession, HttpServletRequest request){
 
-        if(userService.login(userVO.getUserId(), userVO.getUserPw())){
+        if(userService.login(userSession.getUserId(), userSession.getUserPw())){
             HttpSession session = request.getSession(false);
-            session.setAttribute(SessionAttribute.attribute,userVO);
+            session.setAttribute(SessionAttribute.attribute, userSession);
             log.info("session = {}",session.getAttribute(SessionAttribute.attribute));
             return HttpStatus.OK;
         }
 
         return HttpStatus.NOT_FOUND;
     }
+     */
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    private HttpStatus formLogin(UserVO userVO, HttpServletRequest request){
-        if(userService.login(userVO.getUserId(), userVO.getUserPw())){
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionAttribute.attribute,userVO);
+    private HttpStatus formLogin(UserSession userSession, HttpServletRequest request, HttpServletResponse response){
+        UUID uuid = userService.login(userSession.getUserId(), userSession.getUserPw());
 
-            session.getAttributeNames().asIterator()
-                    .forEachRemaining(name -> log.info("session name={}, value={}",
-                            name, session.getAttribute(name)));
-            log.info("sessionId={}", session.getId());
-            log.info("maxInactiveInterval={}", session.getMaxInactiveInterval());
-            log.info("creationTime={}", new Date(session.getCreationTime()));
-            log.info("lastAccessedTime={}", new
-                    Date(session.getLastAccessedTime()));
-            log.info("isNew={}", session.isNew());
+        if(uuid != null){
+            Cookie cookie = new Cookie(SessionAttribute.attribute,uuid.toString());
+            response.addCookie(cookie);
             return HttpStatus.OK;
         }
 
@@ -69,8 +66,8 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public String getUserinfo(@org.springframework.web.bind.annotation.SessionAttribute(name = SessionAttribute.attribute) UserVO userVO){
-        return userVO.getUserId();
+    public String getUserinfo(@org.springframework.web.bind.annotation.SessionAttribute(name = SessionAttribute.attribute) UserSession userSession){
+        return userSession.getUserId();
     }
 
     @GetMapping("/logout")
