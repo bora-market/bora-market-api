@@ -1,5 +1,6 @@
 package boramarket.boramarketapi.web.user.dto;
 
+import boramarket.boramarketapi.config.security.UserRole;
 import boramarket.boramarketapi.domain.entity.user.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class UserRequestDto {
                 .userId(userId)
                 .userPw(encryptedUserPw)
                 .userName(userName)
+                .role(UserRole.USER)
                 .build();
     }
 }

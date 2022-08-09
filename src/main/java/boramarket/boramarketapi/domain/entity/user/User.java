@@ -1,11 +1,13 @@
 package boramarket.boramarketapi.domain.entity.user;
 
+import boramarket.boramarketapi.config.security.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -28,10 +30,15 @@ public class User extends BaseTimeEntity{
     @Column(nullable = false)
     private String userName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     @Builder
-    public User(String userId, String userPw, String userName){
+    public User(String userId, String userPw, String userName, UserRole role){
         this.userId = userId;
         this.userPw = userPw;
         this.userName = userName;
+        this.role = role;
     }
 }

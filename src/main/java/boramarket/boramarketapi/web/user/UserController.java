@@ -1,7 +1,7 @@
 package boramarket.boramarketapi.web.user;
 
 import boramarket.boramarketapi.config.session.SessionAttribute;
-import boramarket.boramarketapi.config.session.vo.UserSession;
+import boramarket.boramarketapi.config.security.UserDetailsImpl;
 import boramarket.boramarketapi.domain.service.UserService;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
 import io.swagger.annotations.Api;
@@ -10,13 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.UUID;
 
 @Api(tags = "유저")
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final HttpSession httpSession;
 
     @PostMapping("/signUp")
     private ResponseEntity<Boolean> signUp(@RequestBody UserRequestDto requestDto){
@@ -53,8 +56,8 @@ public class UserController {
      */
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    private HttpStatus formLogin(UserSession userSession, HttpServletRequest request, HttpServletResponse response){
-        UUID uuid = userService.login(userSession.getUserId(), userSession.getUserPw());
+    private HttpStatus formLogin(UserDetailsImpl userDetailsImpl, HttpServletRequest request, HttpServletResponse response){
+        UUID uuid = userService.login(userDetailsImpl.getUserId(), userDetailsImpl.getUserPw());
 
         if(uuid != null){
             Cookie cookie = new Cookie(SessionAttribute.attribute,uuid.toString());
@@ -66,8 +69,11 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public String getUserinfo(@org.springframework.web.bind.annotation.SessionAttribute(name = SessionAttribute.attribute) UserSession userSession){
-        return userSession.getUserId();
+    public String getUserinfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+        log.info(userDetails.getAuthorities().toString());
+        return userDetails.getUserId();
+
     }
 
     @GetMapping("/logout")
