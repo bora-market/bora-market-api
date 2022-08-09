@@ -10,4 +10,16 @@ public class Controller {
 
         return "index";
     }
+
+    @GetMapping("/ao")
+    public String ao(){
+
+        return "index";
+    }
+
+    @GetMapping("/admin")
+    public String admin(){
+
+        return "index";
+    }
 }
