@@ -1,7 +1,6 @@
 package boramarket.boramarketapi.domain.service;
 
-import boramarket.boramarketapi.config.session.UserRedisRepository;
-import boramarket.boramarketapi.config.session.vo.UserSession;
+import boramarket.boramarketapi.config.security.UserRole;
 import boramarket.boramarketapi.domain.entity.user.User;
 import boramarket.boramarketapi.domain.entity.user.UserRepository;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
@@ -21,7 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserRedisRepository userRedisRepository;
+    private final HttpSession httpSession;
 
     @Transactional
     public Boolean signUp(UserRequestDto requestDto){
@@ -29,6 +28,7 @@ public class UserService {
         if(userRepository.existsByUserId(requestDto.getUserId()))
             return false;
 
+        log.info("role = {}", UserRole.USER);
         userRepository.save(requestDto.toEntity(passwordEncoder.encode(requestDto.getUserPw())));
         return true;
     }
@@ -42,15 +42,6 @@ public class UserService {
         }
 
         UUID uuid = UUID.randomUUID();
-        UserSession userSession = UserSession.builder()
-                .id(uuid.toString())
-                .userId(user.getUserId())
-                .userPw(user.getUserPw())
-                .userName(user.getUserName())
-                .build();
-
-        userRedisRepository.save(userSession);
-
         return uuid;
     }
 }
