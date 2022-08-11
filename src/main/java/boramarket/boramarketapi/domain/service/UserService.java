@@ -6,6 +6,9 @@ import boramarket.boramarketapi.domain.entity.user.UserRepository;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +23,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final HttpSession httpSession;
 
     @Transactional
     public Boolean signUp(UserRequestDto requestDto){
@@ -34,14 +36,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UUID login(String id, String pwd){
+    public boolean login(String id, String pwd){
         User user = userRepository.findByUserId(id).orElse(null);
 
         if(user == null || !passwordEncoder.matches(pwd,user.getUserPw())){
-            return null;
+            return false;
         }
 
-        UUID uuid = UUID.randomUUID();
-        return uuid;
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(id,pwd);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("login = {}",SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return true;
     }
 }

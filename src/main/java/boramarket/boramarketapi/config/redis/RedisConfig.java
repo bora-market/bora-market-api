@@ -1,7 +1,5 @@
 package boramarket.boramarketapi.config.redis;
 
-import boramarket.boramarketapi.config.security.UserDetailsImpl;
-import boramarket.boramarketapi.config.session.UserRedisRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
