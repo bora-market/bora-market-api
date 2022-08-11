@@ -1,21 +1,19 @@
 package boramarket.boramarketapi.web.user;
 
-import boramarket.boramarketapi.config.session.SessionAttribute;
 import boramarket.boramarketapi.config.security.UserDetailsImpl;
 import boramarket.boramarketapi.domain.service.UserService;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -56,26 +54,31 @@ public class UserController {
      */
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    private HttpStatus formLogin(UserDetailsImpl userDetailsImpl, HttpServletRequest request, HttpServletResponse response){
-        UUID uuid = userService.login(userDetailsImpl.getUserId(), userDetailsImpl.getUserPw());
+    private ResponseEntity<String> formLogin(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("userId") String userId,
+            @RequestParam("userPw") String userPw,
+            HttpServletResponse response){
 
-        if(uuid != null){
-            Cookie cookie = new Cookie(SessionAttribute.attribute,uuid.toString());
-            response.addCookie(cookie);
-            return HttpStatus.OK;
+        if(userDetails != null){
+
+            return new ResponseEntity<>("FAIL 이미 로그인 되어 있습니다",HttpStatus.OK);
         }
 
-        return HttpStatus.NOT_FOUND;
+        if(userService.login(userId, userPw)){
+            return new ResponseEntity<>("OK 로그인 성공했습니다",HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("FAIL 로그인 실패하였습니다",HttpStatus.OK);
     }
 
     @GetMapping("/info")
     public String getUserinfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        log.info(userDetails.getAuthorities().toString());
         return userDetails.getUserId();
 
     }
-
+    /*
     @GetMapping("/logout")
     public HttpStatus logout(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -87,4 +90,5 @@ public class UserController {
         }
         return HttpStatus.OK;
     }
+     */
 }
