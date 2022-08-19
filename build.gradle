@@ -51,11 +51,16 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     //redis
-
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.2'
 
     // https://mvnrepository.com/artifact/org.springframework.session/spring-session-data-redis
     implementation 'org.springframework.session:spring-session-data-redis:2.7.0'
+
+    //embedded-redis
+    implementation ('it.ozimov:embedded-redis:0.7.3') { exclude group: "org.slf4j", module: "slf4j-simple" }
+
+
+
 }
 
 tasks.named('test') {
