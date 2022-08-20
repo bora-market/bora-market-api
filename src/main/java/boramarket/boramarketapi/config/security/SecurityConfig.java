@@ -30,11 +30,12 @@ public class SecurityConfig{
                 .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/zz")
+                .exceptionHandling().accessDeniedPage("/index")
                 .and()
                 .sessionManagement()
-                .maximumSessions(-1)
-                .expiredUrl("/zz");
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+                .expiredUrl("/");
 
 
         return http.build();
@@ -55,9 +56,5 @@ public class SecurityConfig{
         return source;
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
 }
