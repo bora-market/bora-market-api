@@ -1,4 +1,4 @@
-package boramarket.boramarketapi.domain.service;
+package boramarket.boramarketapi.service;
 
 import boramarket.boramarketapi.config.security.UserRole;
 import boramarket.boramarketapi.domain.entity.user.User;
@@ -12,9 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpSession;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
