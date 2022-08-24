@@ -3,18 +3,15 @@ package boramarket.boramarketapi.web.user.dto;
 import boramarket.boramarketapi.config.security.UserRole;
 import boramarket.boramarketapi.domain.entity.user.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-@RequiredArgsConstructor
 @Getter
 public class UserRequestDto {
 
 
-    private final String userId;
-    private final String userPw;
-    private final String userName;
+    private  String userId;
+    private  String userPw;
+    private  String userName;
+
+    public UserRequestDto(){}
 
     public User toEntity(String encryptedUserPw){
         return User.builder()
