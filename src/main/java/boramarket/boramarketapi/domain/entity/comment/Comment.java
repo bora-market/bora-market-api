@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Comment {
     @Column(name = "comment_content")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotFound(action=NotFoundAction.IGNORE)
     @JoinColumn(name = "parent_post_id")
     private Post post;

@@ -1,6 +1,5 @@
 package boramarket.boramarketapi.web.comment;
 
-import boramarket.boramarketapi.service.CommentService;
 import boramarket.boramarketapi.service.PostService;
 import boramarket.boramarketapi.web.comment.dto.ResponseCommentDTO;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +15,16 @@ import java.util.List;
 @RestController
 public class CommentController {
 
-    private final CommentService commentService;
+    private final PostService postService;
 
     @GetMapping("/")
     public List<ResponseCommentDTO> getComments(){
 
-        return commentService.findAll();
+        return postService.findAll();
     }
     @GetMapping("/{id}")
     public ResponseCommentDTO getComments(@PathVariable("id") Long id){
 
-        return commentService.findCommentById(id);
+        return postService.findCommentById(id);
     }
 }

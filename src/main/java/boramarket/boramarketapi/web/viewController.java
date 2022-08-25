@@ -34,7 +34,7 @@ public class viewController {
     public @ResponseBody HashMap<String,String> admin(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                       HttpServletResponse response,
                                                       HttpServletRequest request){
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("Id",userDetails.getId());
         map.put("userId",userDetails.getUserId());
         response.setCharacterEncoding("UTF-8");
