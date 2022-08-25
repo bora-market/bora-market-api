@@ -9,7 +9,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 @Getter
 public class PostResponseDTO {
 
@@ -21,6 +21,7 @@ public class PostResponseDTO {
 
     private String postContent;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty(value = "comments")
     private List<ResponseCommentDTO> comments;
 
