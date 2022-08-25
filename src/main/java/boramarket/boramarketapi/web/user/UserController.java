@@ -38,8 +38,7 @@ public class UserController {
     private ResponseEntity<String> formLogin(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("userId") String userId,
-            @RequestParam("userPw") String userPw,
-            HttpServletResponse response){
+            @RequestParam("userPw") String userPw){
 
         if(userDetails != null){
             return new ResponseEntity<>("FAIL 이미 로그인 되어 있습니다",HttpStatus.OK);
