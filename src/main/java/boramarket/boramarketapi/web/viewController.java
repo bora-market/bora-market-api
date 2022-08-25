@@ -1,8 +1,6 @@
 package boramarket.boramarketapi.web;
 
 import boramarket.boramarketapi.config.security.UserDetailsImpl;
-import boramarket.boramarketapi.domain.entity.comment.Comment;
-import boramarket.boramarketapi.domain.entity.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,27 +18,24 @@ import java.util.HashMap;
 @Slf4j
 public class viewController {
 
-    private final CommentRepository commentRepository;
 
     @GetMapping("/")
-    public String index(Model model){
+    public String index(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
+
+        if(userDetails != null)
+            return "redirect:/user/exists";
 
         return "index";
     }
 
-    @GetMapping("/ll")
-    public @ResponseBody String ao(){
-        Comment comment = commentRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
-
-        return comment.getCommentAuthor().getUserName();
-    }
 
     @GetMapping(value = "/user/exists")
+
     public @ResponseBody HashMap<String,String> admin(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                       HttpServletResponse response,
                                                       HttpServletRequest request){
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("Id",userDetails.getId());
+        HashMap<String, String> map = new HashMap<>();
+        map.put("Id",String.valueOf(userDetails.getId()));
         map.put("userId",userDetails.getUserId());
         response.setCharacterEncoding("UTF-8");
 
