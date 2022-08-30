@@ -6,12 +6,14 @@ import boramarket.boramarketapi.domain.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Post extends BaseTimeEntity {
 
     @Id
