@@ -4,6 +4,8 @@ import boramarket.boramarketapi.domain.entity.comment.Comment;
 import boramarket.boramarketapi.domain.entity.comment.CommentRepository;
 import boramarket.boramarketapi.domain.entity.post.Post;
 import boramarket.boramarketapi.domain.entity.post.PostRepository;
+import boramarket.boramarketapi.domain.entity.user.User;
+import boramarket.boramarketapi.domain.entity.user.UserRepository;
 import boramarket.boramarketapi.web.comment.dto.ResponseCommentDTO;
 import boramarket.boramarketapi.web.post.dto.PostResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<PostResponseDTO> getPosts(){
@@ -35,10 +38,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(NoSuchElementException::new);
         List<Comment> comments = commentRepository.findAllByCommentDepthOne(post.getId());
         List<ResponseCommentDTO> responseCommentDTOs = comments.stream().map(ResponseCommentDTO::new).collect(Collectors.toList());
-        return PostResponseDTO.builder()
-                .post(post)
-                .comments(responseCommentDTOs)
-                .build();
+        return toDTO(post,responseCommentDTOs);
     }
 
     @Transactional(readOnly = true)
@@ -56,6 +56,20 @@ public class PostService {
                 .comment(comments)
                 .build();
     }
+
+    @Transactional
+    public Boolean posting(Long id){
+
+        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+        Post post = Post.builder()
+                .postAuthor(user)
+                .build();
+        postRepository.save(post);
+
+        return true;
+    }
+
 
     protected static PostResponseDTO toDTO(Post post, List<ResponseCommentDTO> commentDTOs){
         return PostResponseDTO.builder()

@@ -1,5 +1,6 @@
 package boramarket.boramarketapi.service;
 
+import boramarket.boramarketapi.config.Exception.PasswordNotMatchedException;
 import boramarket.boramarketapi.config.security.UserRole;
 import boramarket.boramarketapi.domain.entity.user.User;
 import boramarket.boramarketapi.domain.entity.user.UserRepository;
@@ -12,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -33,11 +36,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public boolean login(String id, String pwd){
-        User user = userRepository.findByUserId(id).orElse(null);
+    public void login(String id, String pwd){
+        User user = userRepository.findByUserId(id).orElseThrow(NoSuchElementException::new);
 
-        if(user == null || !passwordEncoder.matches(pwd,user.getUserPw())){
-            return false;
+        if(!passwordEncoder.matches(pwd,user.getUserPw())){
+            throw new PasswordNotMatchedException("비밀번호 불일치");
         }
 
         Authentication authentication =
@@ -45,6 +48,5 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("login = {}",SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        return true;
     }
 }

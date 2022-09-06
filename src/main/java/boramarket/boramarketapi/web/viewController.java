@@ -35,7 +35,7 @@ public class viewController {
                                                       HttpServletResponse response,
                                                       HttpServletRequest request){
         HashMap<String, String> map = new HashMap<>();
-        map.put("Id",userDetails.getId());
+        map.put("Id",String.valueOf(userDetails.getId()));
         map.put("userId",userDetails.getUserId());
         response.setCharacterEncoding("UTF-8");
 

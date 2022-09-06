@@ -1,6 +1,7 @@
 package boramarket.boramarketapi.domain.entity.comment;
 
 import boramarket.boramarketapi.domain.entity.post.Post;
+import boramarket.boramarketapi.domain.entity.user.BaseTimeEntity;
 import boramarket.boramarketapi.domain.entity.user.User;
 import lombok.Getter;
 import org.hibernate.annotations.Fetch;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "comment")
 
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

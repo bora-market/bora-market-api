@@ -1,5 +1,6 @@
 package boramarket.boramarketapi.web.user;
 
+import boramarket.boramarketapi.config.Exception.PasswordNotMatchedException;
 import boramarket.boramarketapi.config.security.UserDetailsImpl;
 import boramarket.boramarketapi.service.UserService;
 import boramarket.boramarketapi.web.user.dto.UserRequestDto;
@@ -13,11 +14,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.NoSuchElementException;
 
 @Api(tags = "유저")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
@@ -36,19 +38,19 @@ public class UserController {
     private ResponseEntity<String> formLogin(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("userId") String userId,
-            @RequestParam("userPw") String userPw,
-            HttpServletResponse response){
+            @RequestParam("userPw") String userPw){
 
         if(userDetails != null){
-
             return new ResponseEntity<>("FAIL 이미 로그인 되어 있습니다",HttpStatus.OK);
         }
 
-        if(userService.login(userId, userPw)){
-            return new ResponseEntity<>("OK 로그인 성공했습니다",HttpStatus.OK);
+        try {
+            userService.login(userId, userPw);
+        }catch (NoSuchElementException | PasswordNotMatchedException e){
+            return new ResponseEntity<>("FAIL 아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다",HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("FAIL 로그인 실패하였습니다",HttpStatus.OK);
+        return new ResponseEntity<>("OK 로그인 성공했습니다",HttpStatus.OK);
     }
 
     @GetMapping("/info")
@@ -57,17 +59,4 @@ public class UserController {
         return userDetails.getUserId();
 
     }
-    /*
-    @GetMapping("/logout")
-    public HttpStatus logout(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        session.invalidate();
-        try {
-            log.info(session.getId());
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-        return HttpStatus.OK;
-    }
-     */
 }

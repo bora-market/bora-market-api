@@ -14,8 +14,8 @@ public class BoraMarketApiApplication {
                 .properties(
                         "spring.config.location=" +
                                 "classpath:/application.properties" +
-                                ", file:${user.home}/documents/config/application-redis.properties" +
-                                ", file:${user.home}/documents/config/application-database.properties"
+                                ", file:/etc/config/application-redis.properties" +
+                                ", file:/etc/config/application-database.properties"
                 )
                 .run(args);
 

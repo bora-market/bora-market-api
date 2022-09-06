@@ -17,7 +17,7 @@ import java.util.List;
 public class UserDetailsImpl implements UserDetails {
 
     @Id
-    private String id;
+    private Long id;
     private String userId;
     private String userPw;
     private String userName;
@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     @Builder
-    public UserDetailsImpl(String id, String userId, String userPw, String userName, UserRole role, List<GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String userId, String userPw, String userName, UserRole role, List<GrantedAuthority> authorities) {
         this.id = id;
         this.userId = userId;
         this.userPw = userPw;
@@ -42,7 +42,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getUserId(){
         return this.userId;
     }
-    public String getId() {return this.id;}
+    public Long getId() {return this.id;}
 
     @Override
     public String getUsername() {
